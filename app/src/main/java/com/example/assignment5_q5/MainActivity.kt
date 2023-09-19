@@ -14,18 +14,6 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 
-
-lateinit var selectedOperation: String
-
-class SpinnerActivity : Activity(), AdapterView.OnItemSelectedListener {
-
-    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-        selectedOperation = parent.getItemAtPosition(pos).toString()
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>) {}
-}
-
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +38,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val spinner: Spinner = findViewById(R.id.operationSpinner)
 
-        ArrayAdapter.createFromResource(this, R.array.operations, android.R.layout.simple_spinner_item).also{
+        ArrayAdapter.createFromResource(this, android.R.layout.simple_spinner_item, R.array.operations).also{
             adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
@@ -58,7 +46,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
 
+        lateinit var selectedOperation: String
+
+        class SpinnerActivity : Activity(), AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                selectedOperation = parent.getItemAtPosition(pos).toString()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+
         spinner.onItemSelectedListener = this
+
+
 
 
         var calculateButton: Button = findViewById(R.id.calculateButton)
