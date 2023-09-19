@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Assignment5_Q5</string>
+    <string-array name="operations">
+        <item>+</item>
+        <item>-</item>
+        <item>*</item>
+        <item>/</item>
+        <item>mod</item>
+    </string-array>
 </resources>
