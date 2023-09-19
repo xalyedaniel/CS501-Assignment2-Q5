@@ -1,5 +1,6 @@
 package com.example.assignment5_q5
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -13,7 +14,19 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 
-class MainActivity : AppCompatActivity() {
+
+lateinit var selectedOperation: String
+
+class SpinnerActivity : Activity(), AdapterView.OnItemSelectedListener {
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+        selectedOperation = parent.getItemAtPosition(pos).toString()
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>) {}
+}
+
+class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,22 +43,22 @@ class MainActivity : AppCompatActivity() {
         operand2.addTextChangedListener(decimalLookout)
         operand2.filters = arrayOf(decimalFilter)
 
-        var spinner: Spinner = findViewById(R.id.operationSpinner)
-        val operations = resources.getStringArray(R.array.operations)
-        val adapter = ArrayAdapter(this, R.layout.activity_main, operations)
-        lateinit var selectedOperation: String
-        spinner.adapter = adapter
 
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>,
-                                        view: View, position: Int, id: Long) {
-                selectedOperation = operations[position]
+        //I used https://developer.android.com/develop/ui/views/components/spinner as a source
 
-                }
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+
+        val spinner: Spinner = findViewById(R.id.operationSpinner)
+
+        ArrayAdapter.createFromResource(this, R.array.operations, android.R.layout.simple_spinner_item).also{
+            adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
+
         }
 
+
+        spinner.onItemSelectedListener = this
 
 
         var calculateButton: Button = findViewById(R.id.calculateButton)
@@ -61,11 +74,8 @@ class MainActivity : AppCompatActivity() {
             operand2.setText("0")
         }
 
-
-
-
-
     }
+
 
     private fun calculate(s:String, operand1: EditText, operand2: EditText){
 
@@ -95,6 +105,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private var canAddDecimal = true
 
     //sourced from Java code found at https://stackoverflow.com/questions/3349121/how-do-i-use-inputfilter-to-limit-characters-in-an-edittext-in-android
     private var decimalFilter: InputFilter =
@@ -106,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private var canAddDecimal = true
+
 
     //using text watcher to be 'smart' and avoid multiple decimals when inputting a number
     //from keyboard
