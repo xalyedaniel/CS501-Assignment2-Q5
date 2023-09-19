@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity(){
         operand1.setText("0")
         operand2.setText("0")
 
-        operand1.addTextChangedListener(decimalLookout)
-        operand1.filters = arrayOf(decimalFilter)
-        operand2.addTextChangedListener(decimalLookout)
-        operand2.filters = arrayOf(decimalFilter)
+        operand1.addTextChangedListener(lookout)
+        operand1.filters = arrayOf(filter)
+        operand2.addTextChangedListener(lookout)
+        operand2.filters = arrayOf(filter)
 
 
 
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(){
         calculateButton.setOnClickListener {
             //Toast.makeText(getApplicationContext(), selectedOperation, Toast.LENGTH_SHORT).show()
             try{
-                calculate(selectedOperation, operand1, operand2)
+                calculate(selectedOperation, operand1.text, operand2.text)
             } catch (e: ArithmeticException) {
                 Toast.makeText(getApplicationContext(), "integer overflow", Toast.LENGTH_SHORT).show()
             }
@@ -79,31 +79,34 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-    private fun calculate(s:String, operand1: EditText, operand2: EditText){
+    private fun calculate(s:String, operand1: Editable, operand2: Editable){
+        val o1 = operand1.toString().toFloat()
+        val o2 = operand2.toString().toFloat()
 
         when (s) {
-            "+" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() + operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
-            "-" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() - operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
-            "*" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() * operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+            "+" -> Toast.makeText(getApplicationContext(), (o1+o2).toString(), Toast.LENGTH_SHORT).show()
+            "-" -> Toast.makeText(getApplicationContext(), (o1-o2).toString(), Toast.LENGTH_SHORT).show()
+            "*" -> Toast.makeText(getApplicationContext(), (o1*o2).toString(), Toast.LENGTH_SHORT).show()
             "/" -> {
                 if (operand2.toString().toFloat() == (0).toFloat()){
                     Toast.makeText(getApplicationContext(), "division by zero error", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() + operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(getApplicationContext(), (o1/o2).toString(), Toast.LENGTH_SHORT).show()
                 }
             }
-            "mod" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() % operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+            "mod" -> Toast.makeText(getApplicationContext(), (o1 % o2).toString(), Toast.LENGTH_SHORT).show()
         }
 
         return
     }
 
     private var canAddDecimal = true
+    private var canAddNegativeSign = true
 
     //sourced from Java code found at https://stackoverflow.com/questions/3349121/how-do-i-use-inputfilter-to-limit-characters-in-an-edittext-in-android
-    private var decimalFilter: InputFilter =
+    private var filter: InputFilter =
         InputFilter { input, start, end, dest, dstart, dend ->
-            if (!canAddDecimal and input.contains('.')){
+            if ((!canAddDecimal && input.contains('.')) || (!canAddNegativeSign && input.contains('-'))){
                 ""
             } else {
                 input
@@ -120,11 +123,13 @@ class MainActivity : AppCompatActivity(){
         e.delete(0,1)
     }
 
-    private val decimalLookout: TextWatcher = object : TextWatcher {
+    private val lookout: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable) {
             canAddDecimal = !s.contains('.')
+            canAddNegativeSign = !s.contains('-')
+
 
             if (s.isEmpty()){
                 s.append("0")
@@ -132,6 +137,10 @@ class MainActivity : AppCompatActivity(){
                 if (s.first() == '0' && s.length == 2 && s.last() != '.'){
                     dropFirstChar(s)
                 }
+                if (s.first() == '0' && s.length == 2 && s.last() != '-'){
+                    dropFirstChar(s)
+                }
+
             }
 
 
