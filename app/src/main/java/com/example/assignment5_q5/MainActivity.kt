@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity(){
         var calculateButton: Button = findViewById(R.id.calculateButton)
 
         calculateButton.setOnClickListener {
+            //Toast.makeText(getApplicationContext(), selectedOperation, Toast.LENGTH_SHORT).show()
             try{
                 calculate(selectedOperation, operand1, operand2)
             } catch (e: ArithmeticException) {
@@ -80,30 +81,21 @@ class MainActivity : AppCompatActivity(){
 
     private fun calculate(s:String, operand1: EditText, operand2: EditText){
 
-        if (s == "+"){
-            Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() + operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
-        }
-
-        if (s == "-"){
-            Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() - operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
-        }
-
-        if (s == "*"){
-            Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() * operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
-        }
-
-        if (s == "/"){
-            if (operand2.toString().toFloat() == (0).toFloat()){
-                Toast.makeText(getApplicationContext(), "division by zero error", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() + operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+        when (s) {
+            "+" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() + operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+            "-" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() - operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+            "*" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() * operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+            "/" -> {
+                if (operand2.toString().toFloat() == (0).toFloat()){
+                    Toast.makeText(getApplicationContext(), "division by zero error", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() + operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
+                }
             }
+            "mod" -> Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() % operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
         }
 
-        if (s == "%"){
-            Toast.makeText(getApplicationContext(), (operand1.toString().toFloat() % operand2.toString().toFloat()).toString(), Toast.LENGTH_SHORT).show()
-        }
-
+        return
     }
 
     private var canAddDecimal = true
