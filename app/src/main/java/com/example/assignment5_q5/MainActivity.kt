@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity(){
                 calculate(selectedOperation, operand1.text, operand2.text)
             } catch (e: ArithmeticException) {
                 Toast.makeText(getApplicationContext(), "integer overflow", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(getApplicationContext(), "invalid input", Toast.LENGTH_SHORT).show()
             }
 
             operand1.setText("0")
@@ -134,12 +136,10 @@ class MainActivity : AppCompatActivity(){
             if (s.isEmpty()){
                 s.append("0")
             } else {
-                if (s.first() == '0' && s.length == 2 && s.last() != '.'){
+                if (s.first() == '0' && s.length == 2 && s.last() != '.' && s.last() != '-'){
                     dropFirstChar(s)
                 }
-                if (s.first() == '0' && s.length == 2 && s.last() != '-'){
-                    dropFirstChar(s)
-                }
+
 
             }
 
