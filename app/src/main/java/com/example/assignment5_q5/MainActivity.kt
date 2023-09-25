@@ -23,8 +23,6 @@ class SpinnerActivity : Activity(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {}
-
-
 }
 
 class MainActivity : AppCompatActivity(){
@@ -44,11 +42,7 @@ class MainActivity : AppCompatActivity(){
         operand2.addTextChangedListener(lookout)
         operand2.filters = arrayOf(filter)
 
-
-
         //I used https://developer.android.com/develop/ui/views/components/spinner as a source
-
-
         val spinner: Spinner = findViewById(R.id.operationSpinner)
         spinner.onItemSelectedListener = SpinnerActivity()
 
@@ -56,11 +50,7 @@ class MainActivity : AppCompatActivity(){
             adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
-
         }
-
-
-
 
         var calculateButton: Button = findViewById(R.id.calculateButton)
 
@@ -98,7 +88,6 @@ class MainActivity : AppCompatActivity(){
             }
             "mod" -> Toast.makeText(getApplicationContext(), (o1 % o2).toString(), Toast.LENGTH_SHORT).show()
         }
-
         return
     }
 
@@ -109,18 +98,16 @@ class MainActivity : AppCompatActivity(){
     private var filter: InputFilter =
         InputFilter { input, start, end, dest, dstart, dend ->
             if ((!canAddDecimal && input.contains('.')) || (!canAddNegativeSign && input.contains('-'))){
+                // reset input when invalid input
                 ""
             } else {
                 input
             }
         }
 
-
-
     //using text watcher to be 'smart' and avoid multiple decimals when inputting a number
     //from keyboard
     //source: https://www.geeksforgeeks.org/how-to-implement-textwatcher-in-android/
-
     private fun dropFirstChar(e: Editable){
         e.delete(0,1)
     }
@@ -132,18 +119,14 @@ class MainActivity : AppCompatActivity(){
             canAddDecimal = !s.contains('.')
             canAddNegativeSign = !s.contains('-')
 
-
             if (s.isEmpty()){
                 s.append("0")
             } else {
+                // avoid multiple beginning 0
                 if (s.first() == '0' && s.length == 2 && s.last() != '.' && s.last() != '-'){
                     dropFirstChar(s)
                 }
-
-
             }
-
-
         }
     }
 }
